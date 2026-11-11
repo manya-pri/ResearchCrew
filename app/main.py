@@ -15,11 +15,6 @@ app = FastAPI(
     description="Multi-Agent AI Research Assistant",
     version="1.0.0"
 )
-app = FastAPI(
-    title="ResearchCrew",
-    description="Multi-Agent AI Research Assistant",
-    version="1.0.0"
-)
 
 app.mount(
     "/static",

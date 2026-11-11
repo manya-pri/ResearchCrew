@@ -17,9 +17,19 @@ def get_llm():
     global _llm
 
     if _llm is None:
+        api_key = os.getenv("GROQ_API_KEY")
+
+        if not api_key:
+            raise RuntimeError(
+                "GROQ_API_KEY is missing from environment"
+            )
+
         _llm = ChatGroq(
             model=MODEL_NAME,
-            temperature=0.2
+            api_key=api_key,
+            temperature=0.2,
+            timeout=30,
+            max_retries=1
         )
 
     return _llm
