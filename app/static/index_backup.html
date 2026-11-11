@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ResearchCrew</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080808;color:#fff;font-family:Arial,sans-serif}
+nav{height:75px;padding:0 8%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #292929}
+.logo{font-size:23px;font-weight:bold;letter-spacing:-1px}
+nav a{color:#bbb;text-decoration:none;margin-left:25px;font-size:13px}
+.hero{min-height:590px;display:flex;align-items:center;justify-content:center;text-align:center;padding:60px 20px;background:radial-gradient(ellipse at 50% 100%,#292929,transparent 55%),#080808}
+.hero-content{max-width:850px}
+.tag{font-size:11px;letter-spacing:3px;color:#aaa;border:1px solid #555;padding:10px 18px;border-radius:30px}
+h1{font-family:Georgia,serif;font-size:clamp(45px,8vw,85px);font-weight:normal;line-height:1.12;margin:35px 0 20px}
+h1 span{color:#aaa;font-style:italic}
+p{color:#999;line-height:1.8}
+.btn{display:inline-block;background:#fff;color:#080808;padding:15px 30px;border-radius:30px;text-decoration:none;font-weight:bold;margin-top:20px}
+section{padding:85px 8%;text-align:center}
+.title{font-family:Georgia,serif;font-size:43px;font-weight:normal}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-top:40px}
+.card{background:#151515;border:1px solid #303030;padding:30px 18px;border-radius:13px;text-align:left}
+.card .number{font-size:25px;color:#aaa}
+.card p{font-size:13px}
+.research{background:#0e0e0e}
+.panel{max-width:800px;margin:30px auto;background:#171717;border:1px solid #383838;padding:35px;border-radius:18px;text-align:left}
+input{width:100%;padding:17px;background:#080808;border:1px solid #555;border-radius:8px;color:white;font-size:15px;margin:15px 0}
+button{background:white;color:black;border:0;padding:15px 25px;border-radius:8px;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.5}
+#meta{font-size:13px;color:#ccc;margin-top:20px}
+.results{max-width:1100px;margin:30px auto;display:grid;grid-template-columns:1.5fr 1fr;gap:15px;text-align:left}
+.result{background:#151515;border:1px solid #333;padding:25px;border-radius:12px;min-width:0}
+.result h3{color:#ddd}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;color:#ccc;font-size:13px;line-height:1.8;font-family:Arial,sans-serif}
+footer{text-align:center;padding:35px;border-top:1px solid #292929;color:#888;font-size:12px}
+@media(max-width:700px){nav{padding:0 5%}nav a{margin-left:10px;font-size:11px}.cards{grid-template-columns:repeat(2,1fr)}.results{grid-template-columns:1fr}section{padding:60px 5%}.panel{padding:22px}}
+@media(max-width:380px){.cards{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+<div class="logo">ResearchCrew.</div>
+<div><a href="#home">Home</a><a href="#agents">Agents</a><a href="#research">Research</a></div>
+</nav>
+
+<header class="hero" id="home">
+<div class="hero-content">
+<div class="tag">INTELLIGENT RESEARCH · REIMAGINED</div>
+<h1>Ideas deserve<br><span>deeper research.</span></h1>
+<p>Four intelligent AI agents. One powerful research team.<br>Explore ideas, discover knowledge and generate research reports.</p>
+<a class="btn" href="#research">Start Exploring ↗</a>
+</div>
+</header>
+
+<section id="agents">
+<p>THE INTELLIGENCE TEAM</p>
+<h2 class="title">Four minds. One mission.</h2>
+<div class="cards">
+<div class="card"><div class="number">01 / ◈</div><h3>Planner</h3><p>Breaks topics into research questions.</p></div>
+<div class="card"><div class="number">02 / ⌕</div><h3>Researcher</h3><p>Searches the web and collects sources.</p></div>
+<div class="card"><div class="number">03 / ✎</div><h3>Writer</h3><p>Creates structured research reports.</p></div>
+<div class="card"><div class="number">04 / ✧</div><h3>Critic</h3><p>Reviews and scores the final report.</p></div>
+</div>
+</section>
+
+<section class="research" id="research">
+<p>RESEARCH STUDIO / 01</p>
+<h2 class="title">What shall we explore?</h2>
+<div class="panel">
+<p>Enter your research topic. Your AI team will take it from here.</p>
+<input id="topic" maxlength="200" placeholder="e.g. Future of artificial intelligence">
+<button id="go">Launch Research ↗</button>
+<div id="meta">Your research team is ready.</div>
+</div>
+<div class="results">
+<div class="result"><h3>Research Report</h3><pre id="report">Your report will appear here.</pre></div>
+<div class="result"><h3>Agent Activity</h3><pre id="trace">Waiting for your request...</pre></div>
+</div>
+</section>
+
+<footer>
+<div class="logo">ResearchCrew.</div>
+<p>Powered by LangGraph · Groq · Tavily · FastAPI</p>
+<p>Turning curiosity into knowledge.</p>
+</footer>
+
+<script>
+const button=document.getElementById("go");
+button.onclick=async()=>{
+const topic=document.getElementById("topic").value.trim();
+const meta=document.getElementById("meta");
+const report=document.getElementById("report");
+const trace=document.getElementById("trace");
+if(topic.length<3){meta.textContent="Enter at least 3 characters.";return;}
+button.disabled=true;
+button.textContent="Researching...";
+meta.textContent="Your AI agents are working...";
+report.textContent="Generating report...";
+trace.textContent="Planner → Researcher → Writer → Critic";
+try{
+const response=await fetch("/research",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({topic})});
+if(!response.ok)throw new Error("Server error: "+response.status);
+const data=await response.json();
+meta.textContent="Status: "+data.status+" | Score: "+data.score+"/10 | Tokens: "+data.tokens_used+" | Time: "+data.seconds+"s";
+report.textContent=data.report||"No report generated.";
+trace.textContent=(data.trace||[]).join("\n");
+}catch(error){
+meta.textContent="Error: "+error.message;
+report.textContent="Check the backend terminal for details.";
+trace.textContent="Research request failed.";
+}finally{
+button.disabled=false;
+button.textContent="Launch Research ↗";
+}
+};
+</script>
+</body>
+</html>
